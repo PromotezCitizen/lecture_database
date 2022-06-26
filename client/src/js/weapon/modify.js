@@ -4,20 +4,14 @@ import axios from 'axios';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-
-
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-
-
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
-
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
@@ -39,7 +33,7 @@ const ModifyWeapon = () => {
 	const [spm, setSpm] = useState("");
 	const [type, setType] = useState("");
 	const [ismain, setIsmain] = useState("");
-	const [ischanged, setIschanged] = useState(0);
+	const [ischanged, setIschanged] = useState(false);
 
 	const [weaponList, setWeaponList] = useState([])
 	useEffect(() => {
@@ -67,7 +61,7 @@ const ModifyWeapon = () => {
 	const weaponlistHandler = (e) => {
 		setB_name(e.target.value)
 		dataGetHandler(e.target.value)
-		setIschanged(1)
+		setIschanged(true)
 	}
 	
 	function setTable(data) {
@@ -82,6 +76,7 @@ const ModifyWeapon = () => {
 	}
 	
 	const submitHandler = (e) => {
+		if (!ischanged) return;
     e.preventDefault();
 		
     const body = {
@@ -90,22 +85,22 @@ const ModifyWeapon = () => {
 			armo: Number(armo),
 			spm: Number(spm),
 			type: type,
-			ismain: Number(ismain),
+			ismain: Number(ismain)
 		}
 		
 		axios
-      .put("https://term-express.run.goorm.io/modify_weapon/"+name, body)
+      .put(EXPRESS_URL + "/modify_weapon/"+name, body)
       .then((res) => console.log(res));
   };
 	
 	const removeHandler = async(e) => {
     e.preventDefault();
-		const DELETE_URL = "https://term-express.run.goorm.io/remove_weapon/" + name
+		const DELETE_URL = EXPRESS_URL + "/remove_weapon/" + name
     const body = {
 			name: name
 		}
 		
-		await axios
+		const r = await axios
 			.delete(DELETE_URL, body)
 			.then((res) => console.log(res))
 		
@@ -121,18 +116,19 @@ const ModifyWeapon = () => {
 		handleClose()
 		
 		forceUpdate()
-	}
+	};
 	
 	const [open, setOpen] = useState(false);
 
   const handleClickOpen = () => {
+		if (!ischanged) return;
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
-	
+
   return (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
@@ -166,21 +162,24 @@ const ModifyWeapon = () => {
             <Grid container spacing={2}>
 							<Grid item xs={12}>
 								<TextField
-									name="name"
 									required
 									fullWidth
+									name="name"
 									id="name"
 									label="Name"
 									value={name}
 									onChange={(e) => setName(e.target.value)}
+									inputProps={
+										{ /*readOnly: true,*/ }
+									}
 							/>
 							</Grid>
               <Grid item xs={12}>
                 <TextField
-                  autoComplete="given-name"
-                  name="damage"
                   required
                   fullWidth
+									type="number"
+                  name="damage"
                   id="damage"
                   label="damage"
 									value={damage}
@@ -191,6 +190,7 @@ const ModifyWeapon = () => {
                 <TextField
                   required
                   fullWidth
+									type="number"
                   id="armo"
                   label="armo"
                   name="armo"
@@ -202,6 +202,7 @@ const ModifyWeapon = () => {
                 <TextField
                   required
                   fullWidth
+									type="number"
                   id="spm"
                   label="spm"
                   name="spm"
@@ -218,12 +219,16 @@ const ModifyWeapon = () => {
                   name="type"
 									value={type}
 									onChange={(e) => setType(e.target.value)}
+									inputProps={
+										{ /*readOnly: true,*/ }
+									}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
                   required
                   fullWidth
+									type="number"
                   id="ismain"
                   label="ismain"
                   name="ismain"
@@ -233,21 +238,21 @@ const ModifyWeapon = () => {
               </Grid>
 							<Grid item xs={12} sm={6}>
 								<Button
-									onClick={submitHandler}
 									fullWidth
 									variant="contained"
 									sx={{ mt: 3, mb: 2 }}
 									sm={6}
+									onClick={submitHandler}
 								>
 									제출
 								</Button>
 							</Grid>
 							<Grid item xs={12} sm={6}>
 								<Button
-									onClick={handleClickOpen}
 									fullWidth
 									variant="contained"
 									sx={{ mt: 3, mb: 2 }}
+									onClick={handleClickOpen}
 								>
 									제거
 								</Button>
@@ -277,12 +282,32 @@ const ModifyWeapon = () => {
 						<Button onClick={removeHandler} >예</Button>
 					</DialogActions>
 				</Dialog>
-			</div>			
-			
-			
+			</div>
     </ThemeProvider>
   );
 }
 
-// type="submit"
 export default ModifyWeapon
+
+	// const integHandler = (e) => {
+	// 	switch (e.target.name){
+	// 		case weapondatas[0]:
+	// 			setName(e.target.value)
+	// 			break;
+	// 		case weapondatas[1]:
+	// 			setDamage(e.target.value)
+	// 			break;
+	// 		case weapondatas[2]:
+	// 			setArmo(e.target.value)
+	// 			break;
+	// 		case weapondatas[3]:
+	// 			setSpm(e.target.value)
+	// 			break;
+	// 		case weapondatas[4]:
+	// 			setType(e.target.value)
+	// 			break;
+	// 		case weapondatas[5]:
+	// 			setIsmain(e.target.value)
+	// 			break;
+	// 	}
+	// }

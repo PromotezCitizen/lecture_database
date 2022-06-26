@@ -172,4 +172,4 @@ const AddWeapon = () => {
   );
 }
 
-export default AddWeapon
+export default AddWeapon;
