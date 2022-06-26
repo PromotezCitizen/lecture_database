@@ -97,7 +97,6 @@ app.post('/add_weapon', (req, res) => {
 })
 
 app.delete('/remove_weapon/:name', (req, res) => {
-	console.log(req.params.name)
 	const name = req.params.name
 	const query = `delete from weapon where weapon.name=?`
 	dbc.query(query, name, (err, rows) => {

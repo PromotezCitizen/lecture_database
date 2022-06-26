@@ -13,7 +13,7 @@ import RemoveGadget from './js/gadget/modify.js';
 import NavBar from './js/support/menu.js';
 import Main from './js/support/main.js';
 
-import { BrowserRouter, Route, Routes, Link } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 const App = () => {
 	return(

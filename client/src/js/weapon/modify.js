@@ -1,17 +1,15 @@
-import { useState, useEffect, useCallback } from 'react';
+import { React, useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 
-import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
+
+
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
+
+
 import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -20,15 +18,33 @@ import InputLabel from '@mui/material/InputLabel';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 const EXPRESS_URL = 'https://term-express.run.goorm.io'
 
 const theme = createTheme();
 
 const ModifyWeapon = () => {	
-  const [weaponList, setWeaponList] = useState([])
-  useEffect(() => {
-    getWeaponList()
-  }, [])
+	const [, updateState] = useState()
+	const forceUpdate = useCallback( () => updateState([]), [])
+	
+	const [b_name, setB_name] = useState("");
+	const [name, setName] = useState("");
+	const [damage, setDamage] = useState("");
+	const [armo, setArmo] = useState("");
+	const [spm, setSpm] = useState("");
+	const [type, setType] = useState("");
+	const [ismain, setIsmain] = useState("");
+	const [ischanged, setIschanged] = useState(0);
+
+	const [weaponList, setWeaponList] = useState([])
+	useEffect(() => {
+		getWeaponList()
+	}, [])
 
   const getWeaponList =  async() => {
     try {
@@ -38,16 +54,6 @@ const ModifyWeapon = () => {
       console.log(err)
     }
   }
-
-	const [b_name, setB_name] = useState("");
-	const [name, setName] = useState("");
-	const [damage, setDamage] = useState("");
-	const [armo, setArmo] = useState("");
-	const [spm, setSpm] = useState("");
-	const [type, setType] = useState("");
-	const [ismain, setIsmain] = useState("");
-	const [ischanged, setIschanged] = useState(0);
-	
 	
 	const dataGetHandler = async(name) => {
 		try {
@@ -58,14 +64,11 @@ const ModifyWeapon = () => {
     }
 	}
 	
-	const handler = (e) => {
+	const weaponlistHandler = (e) => {
 		setB_name(e.target.value)
 		dataGetHandler(e.target.value)
 		setIschanged(1)
 	}
-	
-	const [, updateState] = useState()
-	const forceUpdate = useCallback( () => updateState([]), [])
 	
 	function setTable(data) {
 		setName(data.name)
@@ -90,8 +93,6 @@ const ModifyWeapon = () => {
 			ismain: Number(ismain),
 		}
 		
-		const path = "https://term-express.run.goorm.io/modify_weapon/"+name
-		
 		axios
       .put("https://term-express.run.goorm.io/modify_weapon/"+name, body)
       .then((res) => console.log(res));
@@ -104,9 +105,9 @@ const ModifyWeapon = () => {
 			name: name
 		}
 		
-		const res = await axios
-									.delete(DELETE_URL, body)
-									.then((res) => console.log(res))
+		await axios
+			.delete(DELETE_URL, body)
+			.then((res) => console.log(res))
 		
 		setName("")
 		setDamage("")
@@ -117,9 +118,20 @@ const ModifyWeapon = () => {
 		setB_name("")
 		
 		getWeaponList()
+		handleClose()
 		
 		forceUpdate()
 	}
+	
+	const [open, setOpen] = useState(false);
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 	
   return (
     <ThemeProvider theme={theme}>
@@ -141,7 +153,7 @@ const ModifyWeapon = () => {
 								id="demo-simple-select"
 								value={b_name}
 								label="총기"
-								onChange={handler}
+								onChange={weaponlistHandler}
 								sx={{minWidth: 200}}
 							>
 							{ weaponList.map( (g, i) =>   /* list의 map 함수를 이용하여 table의 내용을 구성 */ 
@@ -232,18 +244,42 @@ const ModifyWeapon = () => {
 							</Grid>
 							<Grid item xs={12} sm={6}>
 								<Button
-									onClick={removeHandler}
+									onClick={handleClickOpen}
 									fullWidth
 									variant="contained"
 									sx={{ mt: 3, mb: 2 }}
 								>
 									제거
 								</Button>
-							</Grid>			
+							</Grid>
 						</Grid>
           </Box>
         </Box>
       </Container>
+			
+			<div>
+				<Dialog
+					open={open}
+					onClose={handleClose}
+					aria-labelledby="alert-dialog-title"
+					aria-describedby="alert-dialog-description"
+				>
+					<DialogTitle id="alert-dialog-title">
+						총기 삭제 확인
+					</DialogTitle>
+					<DialogContent>
+						<DialogContentText id="alert-dialog-description">
+							정말로 {name} 총기를 삭제하시겠습니까?
+						</DialogContentText>
+					</DialogContent>
+					<DialogActions>
+						<Button onClick={handleClose} autoFocus>아니오</Button>
+						<Button onClick={removeHandler} >예</Button>
+					</DialogActions>
+				</Dialog>
+			</div>			
+			
+			
     </ThemeProvider>
   );
 }

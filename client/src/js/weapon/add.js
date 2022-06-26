@@ -56,8 +56,6 @@ const AddWeapon = () => {
 			ismain: ismain
 		}
 		
-		console.log(body)
-		
     axios
      .post("https://term-express.run.goorm.io/add_weapon", body)
      .then((res) => console.log(res));
