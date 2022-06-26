@@ -1,57 +1,66 @@
-import React from 'react';
+import * as React from 'react';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import Paper from '@mui/material/Paper';
+
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-// 3010 포트 도메인
-// URL 맨 뒤에 / (슬래시) 없어야 하므로 주의할 것
 const EXPRESS_URL = 'https://term-express.run.goorm.io'
 
 function clickChange(idx, name, speed){
-	const td = document.getElementsByTagName("span").item(idx)
+	const td = document.getElementById("weapon_" + idx)
 	td.innerText === name ? td.innerText = speed : td.innerText = name
-	console.log(td.innerText)
 }
 
 const WTable = () => {
-  const [R6S, setR6S] = useState([])
+  const [weapon, setWeapon] = useState([])
   useEffect(() => {
-    getR6S()
+    getWeapon()
   }, [])
 
-  const getR6S =  async() => {
+  const getWeapon =  async() => {
     try {
       const res = await axios.get(EXPRESS_URL + '/weapon')
-      setR6S(res.data)
+      setWeapon(res.data)
     } catch (err) {
       console.log(err)
     }
-  }
+  }	
 
   return (
-	<div className="Table">
-		<table>
-		  <thead>
-			<tr>
-				<th>name</th>
-				<th>팀</th>
-				<th>gun</th>
-				<th>damage</th>
-			</tr>
-		  </thead>
-		  <tbody>
-			{ R6S.map( (g, i) =>
-							<tr key={i}>
-						    <td onClick={function() {clickChange(i, g.오퍼레이터, g.speed)}}>
-									<img src={ process.env.PUBLIC_URL + '/img/' + g.image } width="30px" height="30px"/>
-									<span>{ g.오퍼레이터 }</span></td>
-						    <td>{ g.attdef === 1 ? "공격" : "방어" }</td>
-						    <td>{g.총기 + ' (' + g.guntype + ',' + (g.ismain === 1 ? "주" : "보조") + ')'}</td>
-						    <td>{g.damage}</td>
-						 	</tr>) }
-		  </tbody>
-		</table>
-	</div>
-  )
+    <TableContainer component={Paper}>
+      <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <TableHead>
+          <TableRow>
+            <TableCell>name</TableCell>
+            <TableCell>team</TableCell>
+            <TableCell>gun</TableCell>
+            <TableCell>damage</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {weapon.map((g, i) => (
+            <TableRow
+              key={i}
+            >
+              <TableCell scope="row" onClick={function() {clickChange(i, g.오퍼레이터, g.speed)}}>
+								<img src={ process.env.PUBLIC_URL + '/img/' + g.image } width="30px" height="30px"/>
+								<span id={"weapon_" + i}>{ g.오퍼레이터 }</span>
+              </TableCell>
+              <TableCell>{ g.attdef === 1 ? "공격" : "방어" }</TableCell>
+              <TableCell>{g.총기 + ' (' + g.guntype + ',' + (g.ismain === 1 ? "주" : "보조") + ')'}</TableCell>
+              <TableCell>{g.damage}</TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </TableContainer>
+  );
 }
 
 export default WTable;

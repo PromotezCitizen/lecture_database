@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 
 import * as React from 'react';
 import Grid from '@mui/material/Grid';
@@ -14,6 +14,8 @@ import Paper from '@mui/material/Paper';
 import Container from '@mui/material/Container';
 import CssBaseline from '@mui/material/CssBaseline';
 import Box from '@mui/material/Box';
+
+import axios from 'axios';
 
 const theme = createTheme();
 
@@ -39,6 +41,9 @@ const AddWeapon = () => {
 		{code: 0, name: "보조무기"}
 	]
 	
+	const [, updateState] = useState()
+	const forceUpdate = useCallback( () => updateState([]), [])
+	
 	const submitHandler = (e) => {
     e.preventDefault();
 		
@@ -53,11 +58,18 @@ const AddWeapon = () => {
 		
 		console.log(body)
 		
-    // axios
-    //   .post("https://term-express.run.goorm.io/add_weapon", body)
-    //   .then((res) => console.log(res));
+    axios
+     .post("https://term-express.run.goorm.io/add_weapon", body)
+     .then((res) => console.log(res));
 		
-		// window.location.reload();
+		setName("")
+		setDamage("")
+		setArmo("")
+		setSpm("")
+		setType("")
+		setIsmain("")
+		
+		forceUpdate()
   };
 	
   return (

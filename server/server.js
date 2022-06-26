@@ -7,10 +7,11 @@ const app = express()
 const port = 3010
 
 const dbc = mysql.createConnection({
-	host: 'localhost',
+	host: '127.0.0.1',
 	user: 'root',
 	password: 'mysql1234',
-	database: 'mydb'
+	database: 'mydb',
+	port: '3306'
 })
 
 app.use(cors())
