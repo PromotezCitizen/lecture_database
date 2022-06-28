@@ -1,6 +1,8 @@
 import './App.css';
 import React from 'react';
 
+import SignInOutContainer from './js/support/signForm.js'
+
 import WTable from './js/weapon/weapon.js';
 import AddWeapon from './js/weapon/add.js';
 import ModifyWeapon from './js/weapon/modify.js';
@@ -21,6 +23,9 @@ const App = () => {
 		<BrowserRouter>
 		  <NavBar />  { /* router를 이용하여 페이지 전환 기능 구현 */}
 		  <Routes>
+			 <Route path="/testform" element={<SignInOutContainer />} />
+				
+				
 				<Route path="/" element={<Main />} />
 				
 				<Route path="/weapon" element={<WTable />} />
