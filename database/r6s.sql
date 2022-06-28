@@ -96,12 +96,12 @@ CREATE TABLE `gadgetlist` (
 	DEFAULT CHARACTER SET utf8
 	DEFAULT COLLATE utf8_general_ci;
   
-CREATE TABLE `users` (
+CREATE TABLE `user` (
   `uid` INT NOT NULL AUTO_INCREMENT,
   `id` VARCHAR(45) NOT NULL,
   `pw` VARCHAR(45) NOT NULL,
-  `prig` BOOLEAN NOT NULL DEFAULT FALSE,
   `nickname` VARCHAR(45) NOT NULL,
+  `prig` BOOLEAN NOT NULL DEFAULT FALSE,
   PRIMARY KEY (`uid`)
 ) ENGINE = InnoDB
 	DEFAULT CHARACTER SET utf8
@@ -403,4 +403,4 @@ insert into gadgetlist values
     (20,9),
     (20,8);
     
-insert into user values (1, 'admin', 'admin', 1, 'admin');
+insert into user values (1, 'admin', 'admin', 'admin', 1);

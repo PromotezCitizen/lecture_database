@@ -1,4 +1,4 @@
-import React from 'react'
+import { React, useState } from 'react'
 import { Grid, Paper, Avatar, Typography, TextField, Button } from '@mui/material'
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import Radio from '@mui/material/Radio';
@@ -7,8 +7,42 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import Checkbox from '@mui/material/Checkbox';
+import axios from 'axios';
 
-const SignUp = () => {
+const EXPRESS_URL = 'https://term-express.run.goorm.io'
+
+const SignUp = (props) => {
+		const [id, setId] = useState("")
+		const [pw, setPw] = useState("")
+		const [_pw, set_Pw] = useState("")
+		const [nickname, setNickname] = useState("")
+		
+    const hasError = (target, len) =>
+        target.length < len ? true : false;
+	
+    const hasNotSameError = passwordEntered =>
+				pw != _pw ? true : false;
+
+    const onSubmitHandler = (event) => {
+			event.preventDefault(); // 아무 동작 안하고 버튼만 눌러도 리프레쉬 되는 것을 막는다
+
+			if(pw !== _pw){
+					return alert('비밀번호와 비밀번호 확인은 같아야 합니다.')
+			}
+
+			const body = {
+				password: pw,
+				id: id,
+				nickname: nickname
+			}
+
+			console.log(body)
+			
+			axios
+				.post(EXPRESS_URL + "/user/signup", body)
+				.then((res) => console.log(res));
+    }
+		
     const paperStyle = { padding: 20, width: 300, margin: "0 auto" }
     const headerStyle = { margin: 0 }
     const avatarStyle = { backgroundColor: '#1bbd7e' }
@@ -24,23 +58,59 @@ const SignUp = () => {
                     <Typography component={'span'} variant='caption' gutterBottom>Please fill this form to create an account !</Typography>
                 </Grid>
                 <form>
-                    <TextField fullWidth label='Name' placeholder="Enter your name" />
-                    <TextField fullWidth label='Email' placeholder="Enter your email" />
-                    <FormControl component="fieldset" style={marginTop}>
-                        <FormLabel component="legend">Gender</FormLabel>
-                        <RadioGroup aria-label="gender" name="gender" style={{ display: 'initial' }}>
-                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                            <FormControlLabel value="male" control={<Radio />} label="Male" />
-                        </RadioGroup>
-                    </FormControl>
-                    <TextField fullWidth label='Phone Number' placeholder="Enter your phone number" />
-                    <TextField fullWidth label='Password' placeholder="Enter your password"/>
-                    <TextField fullWidth label='Confirm Password' placeholder="Confirm your password"/>
-                    <FormControlLabel
-                        control={<Checkbox name="checkedA" />}
-                        label="I accept the terms and conditions."
-                    />
-                    <Button type='submit' variant='contained' color='primary'>Sign up</Button>
+                  <Grid item xs={12}>
+										<TextField
+											fullWidth
+											label='Id'
+											value={id}
+											onChange={ e => setId(e.target.value) }
+											placeholder="Enter your ID"
+										/>
+                  </Grid>
+									<Grid item xs={12}>
+										<TextField 
+											fullWidth 
+											label='Nickname' 
+											value={nickname} 
+											onChange={ e => setNickname(e.target.value) }
+											error={hasError(nickname, 1)}
+											placeholder="Nickname(1글자 이상 필수)"
+										/>
+                  </Grid>
+									<Grid item xs={12}>
+										<TextField 
+											fullWidth 
+											label='Password' 
+											value={pw} 
+											onChange={ e => setPw(e.target.value) } 
+											error={hasError(pw, 5)}
+											placeholder="Enter your password(5글자 이상 필수)"
+											type="password"
+										/>
+                  </Grid>
+									<Grid item xs={12}>
+										<TextField 
+											fullWidth 
+											label='Confirm Password' 
+											value={_pw} 
+											onChange={ e => set_Pw(e.target.value) } 
+											error={hasNotSameError('confirmPassword')}
+											placeholder="Confirm your password"
+											type="password"
+											helperText={hasNotSameError('confirmPassword') ? "입력한 비밀번호와 일치하지 않습니다." : null}
+										/>
+                  </Grid>
+									<Grid item xs={12}>
+										<Button
+											fullWidth
+											onClick={onSubmitHandler}
+											variant='contained'
+											color='primary'
+										>
+											Sign up
+										</Button>
+									</Grid>
+									
                 </form>
             </Paper>
         </Grid>
@@ -48,3 +118,5 @@ const SignUp = () => {
 }
 
 export default SignUp;
+
+//  type='submit'

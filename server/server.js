@@ -145,32 +145,33 @@ app.get('/gadget', (req, res) => {
 	})
 })
 
+
+// ===================================================================================================
 app.post('/user/signup', (req, res) => {
-	const query = `insert into user values (?)`
-	const user = req.body
-	const user_dat = [
+	const user = [
 		null,
 		req.body.id,
-		req.body.pw,
-		false,
-		req.body.nickname
+		req.body.password,
+		req.body.nickname,
+		false
 	]
 
-	
-// ===================================================================================================
-	dbc.query(query, user_dat, (err, rows) => {
-		if (err) {
+	const query = `insert into user values (?)`
+	dbc.query(query, [user], (err, rows) => {
+		if (err){
 			res.send('{"status": "error"}')
 			return console.log(err)
 		}
 		res.send(rows)
 	})
 })
-
-app.get('/user/signin/:id', (req, res) => {
-	const query = `select * from user where id=?`
-	dbc.query(query, req.params.id, (err, rows) => {
-		if (err) {
+	
+app.get('/user/signin/:id/:pw', (req,res) => {
+	const id = req.params.id
+	const pw = req.params.pw
+	const query = `select nickname, prig from user where id=? and pw=?`
+	dbc.query(query, [id, pw], (err, rows) => {
+		if (err){
 			res.send('{"status": "error"}')
 			return console.log(err)
 		}

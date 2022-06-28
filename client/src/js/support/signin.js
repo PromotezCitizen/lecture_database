@@ -5,10 +5,25 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 
 import {useState} from 'react'
+import axios from 'axios'
 
-const SignIn = ({handleChange}) => {
+const EXPRESS_URL = 'https://term-express.run.goorm.io'
+
+const SignIn = ( {setName, setPrig} ) => {
 	const [id, setId] = useState("")
 	const [pw, setPw] = useState("")
+	
+		
+	const isExist = async(e, setName, setPrig) => {
+		e.preventDefault()
+		
+		const data = await axios.get(EXPRESS_URL + '/user/signin/' + id + "/" + pw)
+		
+		if (data.data.length === 0) return
+		setName(data.data[0].nickname)
+		setPrig(data.data[0].prig)
+		console.log(data.data[0])
+	}	
 	
 	const paperStyle={padding :20,height:'73vh',width:300, margin:"0 auto"}
 	const avatarStyle={backgroundColor:'#1bbd7e'}
@@ -38,12 +53,7 @@ const SignIn = ({handleChange}) => {
 									fullWidth
 									required/>
 							</form>
-							<Button type='submit' color='primary' variant="contained" style={btnstyle} fullWidth>Sign in</Button>
-							<Typography component={'span'}> Do you have an account ?
-									 <Link href="#" onClick={()=>handleChange("event",1)} >
-											Sign Up 
-							</Link>
-							</Typography>
+							<Button color='primary' variant="contained" style={btnstyle} fullWidth onClick={(e) => isExist(e, setName, setPrig)}>Sign in</Button>
 					</Paper>
 			</Grid>
     )

@@ -41,8 +41,9 @@ function a11yProps(index) {
   };
 }
 
-const SignInOutContainer = () => {
+const SignInOutContainer = ( {setName, setPrig} ) => {
   const [value, setValue] = React.useState(0);
+	const [user, setUser] = React.useState(null);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -57,7 +58,7 @@ const SignInOutContainer = () => {
 					</Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-					<SignIn />
+					<SignIn setName={setName} setPrig={setPrig}/>
 				</TabPanel>
         <TabPanel value={value} index={1}>
 					<SignUp />

@@ -15,6 +15,10 @@ import PopupState, { bindTrigger, bindMenu } from 'material-ui-popup-state';
 import { Link } from "react-router-dom";
 import AirIcon from '@mui/icons-material/Air';
 
+import styled from 'styled-components';
+
+import "./menu.css"
+
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
 
@@ -65,7 +69,7 @@ const TabMenu = () => {
 	);
 }
 
-const NavBar = () => {
+const NavBar = ({name, prig}) => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
@@ -94,7 +98,7 @@ const NavBar = () => {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -105,7 +109,9 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-            R&D
+            <Link to="/">
+							{name}
+						</Link>
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -146,7 +152,7 @@ const NavBar = () => {
             variant="h5"
             noWrap
             component="a"
-            href="/"
+            
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -158,7 +164,9 @@ const NavBar = () => {
               textDecoration: 'none',
             }}
           >
-            R&D
+						<Link to="/">
+							{name}
+						</Link>
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
 							<TabMenu />
@@ -167,7 +175,7 @@ const NavBar = () => {
           <Box sx={{ flexGrow: 0 }}>
             <Tooltip title="Open settings">
               <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+                <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" onClick={(e) => console.log(name, prig===0 ? "user" : "admin")}/>
               </IconButton>
             </Tooltip>
             <Menu
